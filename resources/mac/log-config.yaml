@@ -1,0 +1,8 @@
+rotation:                             # parameters for logger rotation
+    logLimit: 5242880                 # 5MB -- size of file in bytes
+    keepFiles: 20                     # max number of files to keep
+termSeveritiesErr: All                # for console output
+loggerTree:
+    ale-wallet:
+        severity: Debug+
+        file: logs/ale-wallet.log

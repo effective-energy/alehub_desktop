@@ -1,0 +1,19 @@
+{
+    "distribution": {
+        "balanceDistribution": {
+            "fiSKYTb1j+g0LUd9p0TQArkXf53BsfsZoRI6CBw9Eqs=": {
+                "$@": 1000
+            },
+            "6i2s8e8hblfc0areA1/wHAJ8wNdilU3i2cc8kfs2jAM=": {
+                "$@": 1000
+            },
+            "dzW5MO7NPpTow8I+eO3Cd2EfY2X+UzsiNz0I+q0zKsk=": {
+                "$@": 1000
+            },
+            "yt6/0a90o8Z9My+tZA9kXYATIdk/XeTpvGYJ5GN1y5I=": {
+                "$@": 1000
+            }
+        }
+    },
+    "serverKey": "l4glxEjOS8LvDYPBpgiW3TGPabGSRx/CVRNxADlqBRs="
+}
