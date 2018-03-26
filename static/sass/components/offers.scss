@@ -195,6 +195,7 @@
       font-weight: 300;
       line-height: 1.13;
       color: #34343e;
+      white-space: nowrap;
 
       & .bold {
         font-family: MuseoSansCyrl500;
@@ -243,6 +244,7 @@
   justify-content: flex-start;
   align-items: center;
   margin-top: 6px;
+  flex-wrap: wrap;
 
   & p {
     opacity: 0.8;
@@ -259,6 +261,7 @@
     border-radius: 2px;
     background-color: #dedfdf;
     padding: 2px 6px 4px 6px;
+    margin-bottom: 8px;
 
     & span {
       opacity: 0.8;
@@ -268,6 +271,7 @@
       line-height: 1.17;
       text-align: left;
       color: #0d1717;
+      white-space: nowrap;
     }
 
     &:not(:last-child) {

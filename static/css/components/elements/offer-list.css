@@ -34,7 +34,8 @@
       font-size: 16px;
       font-weight: 300;
       line-height: 1.13;
-      color: #34343e; }
+      color: #34343e;
+      white-space: nowrap; }
       .offer-list .footer .timeout .bold {
         font-weight: 500; }
   .offer-list .subtitle {

@@ -16,33 +16,35 @@
             </div>
         </div>
         <div class="bottom" v-if="!hideFilter">
-            <div class="date">
-                <h3 class="date-title">
-                    Select a date range
-                </h3>
-                <div class="datepicker-wrap">
-                    <datepicker
-                            id="datepickerFrom"
-                            v-model="dateFrom"
-                            language="en"
-                            :placeholder="placeholderDateFrom"
-                    />
+            <div class=row-sm-screen>
+                <div class="date">
+                    <h3 class="date-title">
+                        Select a date range
+                    </h3>
+                    <div class="datepicker-wrap">
+                        <datepicker
+                                id="datepickerFrom"
+                                v-model="dateFrom"
+                                language="en"
+                                :placeholder="placeholderDateFrom"
+                        />
 
-                    <datepicker
-                            id="datepickerTo"
-                            v-model="dateTo"
-                            language="en"
-                            :placeholder="placeholderDateTo"
-                    />
+                        <datepicker
+                                id="datepickerTo"
+                                v-model="dateTo"
+                                language="en"
+                                :placeholder="placeholderDateTo"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="docs">
-                <button class="buttons btn-yellow">
-                    Download PDF
-                </button>
-                <button class="buttons btn-default">
-                    Share
-                </button>
+                <div class="docs">
+                    <button class="buttons btn-yellow">
+                        Download PDF
+                    </button>
+                    <button class="buttons btn-default">
+                        Share
+                    </button>
+                </div>
             </div>
             <div class="info" style="display: flex;">
                 <div class="stats-col" style="display: flex; flex-direction: column;">
@@ -386,6 +388,9 @@
         justify-content space-between
         align-items center
 
+        .row-sm-screen
+            display flex
+
         .date
             display flex
             flex-direction column
@@ -427,6 +432,7 @@
         color #b10303
 
     .result-opt-span
+        white-space nowrap
         padding 5px
         margin 0 10px 0 10px
         align-self flex-end
@@ -435,6 +441,48 @@
             padding 5px
             margin 0 10px 0 10px
 
+    @media(max-width: 1100px)
+        .bottom 
+            flex-direction row
+
+            .info
+                margin-bottom 5px
+                align-self flex-end
+
+        .row-sm-screen
+            flex-direction column
+            align-items flex-start
+
+            .date
+                margin-bottom 20px
+
+            .docs
+                flex-direction row
+                padding-left 15px
+
+                .buttons
+                    margin-right 4px
+
+
+    @media(max-width: 920px)
+        .bottom
+            .info
+                margin-bottom 0
+
+                .result-opt-span
+                    margin-right 0
+
+            .row-sm-screen
+                .date
+                    padding-left 0
+
+                .docs
+                    flex-direction column
+                    padding-left 0
+
+                    .buttons
+                        width 190px
+                        margin-bottom 10px
 
 
 </style>

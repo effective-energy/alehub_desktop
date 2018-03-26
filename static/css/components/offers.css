@@ -147,7 +147,8 @@
       font-size: 16px;
       font-weight: 300;
       line-height: 1.13;
-      color: #34343e; }
+      color: #34343e;
+      white-space: nowrap; }
       .offer-list .footer .timeout .bold {
         font-family: MuseoSansCyrl500; }
   .offer-list .subtitle {
@@ -184,7 +185,8 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 6px; }
+  margin-top: 6px;
+  flex-wrap: wrap; }
   .tags-list p {
     opacity: 0.8;
     font-family: MuseoSansCyrl500;
@@ -197,7 +199,8 @@
   .tags-list .tag {
     border-radius: 2px;
     background-color: #dedfdf;
-    padding: 2px 6px 4px 6px; }
+    padding: 2px 6px 4px 6px;
+    margin-bottom: 8px; }
     .tags-list .tag span {
       opacity: 0.8;
       font-family: MuseoSansCyrl500;
@@ -205,7 +208,8 @@
       font-weight: 500;
       line-height: 1.17;
       text-align: left;
-      color: #0d1717; }
+      color: #0d1717;
+      white-space: nowrap; }
     .tags-list .tag:not(:last-child) {
       margin-right: 8px; }
 

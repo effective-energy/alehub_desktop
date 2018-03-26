@@ -396,4 +396,13 @@
             }
         }
     }
+    @media(max-width: 1024px) {
+        .activity-list {
+            & .details {
+                & .info {
+                    min-width: 300px;
+                }
+            }
+        }
+    }
 </style>
