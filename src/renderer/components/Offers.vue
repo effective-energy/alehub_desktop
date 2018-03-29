@@ -404,5 +404,8 @@
         align-items center
         justify-content center
 
-
+    @media(max-width: 1040px)
+        .main
+            .content
+                padding-left 0
 </style>

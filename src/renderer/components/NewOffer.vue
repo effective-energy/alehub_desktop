@@ -444,6 +444,26 @@
 
     .btn-upload
         line-height 1.17
+    
+    @media(max-width: 1040px)
+        .main
+            .content
+                padding-left 0
 
+    @media(max-width: 820px)
+        .table
+            tbody
+                tr
+                    th
+                        &.inline
+                            flex-direction column
+                            align-items flex-start
+                    
+                    td
+                        padding-bottom 0
+
+                .uploadfile
+                    margin-left 0
+                    margin-top 10px
 
 </style>

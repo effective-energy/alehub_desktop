@@ -16,35 +16,33 @@
             </div>
         </div>
         <div class="bottom" v-if="!hideFilter">
-            <div class=row-sm-screen>
-                <div class="date">
-                    <h3 class="date-title">
-                        Select a date range
-                    </h3>
-                    <div class="datepicker-wrap">
-                        <datepicker
-                                id="datepickerFrom"
-                                v-model="dateFrom"
-                                language="en"
-                                :placeholder="placeholderDateFrom"
-                        />
+            <div class="date">
+                <h3 class="date-title">
+                    Select a date range
+                </h3>
+                <div class="datepicker-wrap">
+                    <datepicker
+                            id="datepickerFrom"
+                            v-model="dateFrom"
+                            language="en"
+                            :placeholder="placeholderDateFrom"
+                    />
 
-                        <datepicker
-                                id="datepickerTo"
-                                v-model="dateTo"
-                                language="en"
-                                :placeholder="placeholderDateTo"
-                        />
-                    </div>
+                    <datepicker
+                            id="datepickerTo"
+                            v-model="dateTo"
+                            language="en"
+                            :placeholder="placeholderDateTo"
+                    />
                 </div>
-                <div class="docs">
-                    <button class="buttons btn-yellow">
-                        Download PDF
-                    </button>
-                    <button class="buttons btn-default">
-                        Share
-                    </button>
-                </div>
+            </div>
+            <div class="docs">
+                <button class="buttons btn-yellow">
+                    Download PDF
+                </button>
+                <button class="buttons btn-default">
+                    Share
+                </button>
             </div>
             <div class="info" style="display: flex;">
                 <div class="stats-col" style="display: flex; flex-direction: column;">
@@ -373,6 +371,10 @@
 
         .selected
             background-color #f0f0f0 !important
+    
+    @media(max-width: 840px)
+        input#datepickerFrom, input#datepickerTo
+            margin-right 0
 </style>
 
 <style lang="stylus" scoped>
@@ -447,17 +449,15 @@
 
             .info
                 margin-bottom 5px
-                align-self flex-end
-
-        .row-sm-screen
-            flex-direction column
-            align-items flex-start
 
             .date
-                margin-bottom 20px
+                .datepicker-wrap
+                    flex-direction column
+                    
+                    .vdp-datepicker
+                        margin-bottom 10px
 
             .docs
-                flex-direction row
                 padding-left 15px
 
                 .buttons
@@ -472,17 +472,34 @@
                 .result-opt-span
                     margin-right 0
 
-            .row-sm-screen
-                .date
-                    padding-left 0
+            .date
+                padding-left 5px
+                margin-right 10px
 
-                .docs
-                    flex-direction column
-                    padding-left 0
+            .docs
+                flex-direction column
+                padding-left 0
 
-                    .buttons
-                        width 190px
-                        margin-bottom 10px
+                .buttons
+                    width 140px
+                    margin-bottom 10px
 
+    @media(max-width: 840px)
+        .bottom 
+            flex-direction column
+
+            .date
+                width 190px
+                align-items center
+
+                .datepicker-wrap
+                    width 100%
+                    flex-direction row
+                    justify-content space-between
+
+            .docs
+                flex-direction row
+                width 300px
+                justify-content space-between
 
 </style>
