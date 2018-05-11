@@ -15,7 +15,6 @@ import VueI18n from 'vue-i18n';
 import Toasted from 'vue-toasted';
 import VueResource from 'vue-resource';
 import cors_proxy from 'cors-anywhere';
-import lodash from 'lodash';
 
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
@@ -52,15 +51,15 @@ const i18n = new VueI18n({
   messages
 });
 
-// var host = process.env.HOST || 'localhost';
-// var port = process.env.PORT || 8080;
-// cors_proxy.createServer({
-//   originWhitelist: [], // Allow all origins
-//   requireHeader: ['origin', 'x-requested-with'],
-//   removeHeaders: ['cookie', 'cookie2']
-// }).listen(port, host, function() {
-//   console.log('Running CORS Anywhere on ' + host + ':' + port);
-// });
+var host = process.env.HOST || 'localhost';
+var port = process.env.PORT || 8080;
+cors_proxy.createServer({
+  originWhitelist: [], // Allow all origins
+  requireHeader: ['origin', 'x-requested-with'],
+  removeHeaders: ['cookie', 'cookie2']
+}).listen(port, host, function() {
+  console.log('Running CORS Anywhere on ' + host + ':' + port);
+});
 
 
 /* eslint-disable no-new */

@@ -203,9 +203,10 @@
                 // return 0;
                 let _this = this;
                 storage.getAll(function(error, data) {
-                    if (error) throw error
-                    let selectedWallet = data.selectedWallet
-                    let wallets = data.wallets
+                    if (error) throw error;
+                    if (!data.selectedWallet) return _this.cur = 0;
+                    let selectedWallet = data.selectedWallet;
+                    let wallets = data.wallets;
                     _this.cur = wallets.find(function(item) {
                         return item.address == selectedWallet
                     }).balance
@@ -214,7 +215,6 @@
         },
         created () {
             this.getCurrentWalletBalance()
-            console.log(this.cur)
         }
     }
 </script>

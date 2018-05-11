@@ -50,7 +50,7 @@
                             <!--</button>-->
                         <!--</div>-->
 
-                        <div class="col-12" style="margin-top: 20px;">
+                        <div class="col-12" style="margin-top: 20px;" v-if="false">
 
                             <Search-panel
                                     :filters="filters"
@@ -89,16 +89,16 @@
 
                         <div class="col-12">
 
-                            <!--<Panel-heading :title="$t('pages.summary.panelHeadings.recent')"/>-->
+                            <Panel-heading :title="$t('pages.summary.panelHeadings.recent')"/>
 
-                            <!--<Activity-list-->
-                            <!--:activities="getActivity"-->
-                            <!--v-if="getActivity.length > 0"-->
-                            <!--/>-->
+                            <Activity-list
+                            :activities="getActivity"
+                            v-if="getActivity.length > 0"
+                            />
 
-                            <!--<div v-else class="empty-notif">-->
-                            <!--<p>No transactions found</p>-->
-                            <!--</div>-->
+                            <div v-else class="empty-notif">
+                            <p>No transactions found</p>
+                            </div>
 
                         </div>
                     </div>
@@ -157,6 +157,16 @@
             // dateTo: function (val) {
             //     console.log(val, 'dateTo');
             // }
+            selectedWallet: function (val) {
+                if (this.setIntervalIdTransactions) {
+                    clearInterval(this.setIntervalIdTransactions)
+                }
+                let _this = this;
+                this.getTransactionsForWallet();
+                this.setIntervalIdTransactions = setInterval(function () {
+                    _this.getTransactionsForWallet();
+                }, 15000);
+            }
         },
         data() {
             return {
@@ -191,7 +201,8 @@
                 },
                 searchText: '',
                 walletList: [],
-                transactionsList: []
+                transactionsList: [],
+                setIntervalIdTransactions: 0
             }
         },
         computed: {
@@ -325,7 +336,7 @@
                 setActivePeriod: 'SET_ACTIVE_PERIOD',
 
                 changeActiveFilter: "CHANGE_ACTIVE_FILTER",
-                searchTransaction: "CHANGE_FILTER_TEXT",
+                searchTransaction: "CHANGE_FILTER_TEXT"
             }),
             openModal(name) {
                 this.$modal.show(name);
@@ -394,6 +405,7 @@
                 }
                 }).then(response => {
                     this.setNewWalletToStorage(name, response.body.wiPublicKey)
+                    this.changeNewWallet(response.body.wiPublicKey)
                 }, response => {
                     console.log('Все сломалось(')
                 })
@@ -517,7 +529,6 @@
                             console.log('Все сломалось(')
                         })
                     }
-                    _this.getTransactionsForWallet()
                 })
             },
             getTransactionsForWallet() {
@@ -548,7 +559,7 @@
             setTimeout(() => {
                 this.getWalletList();
                 this.updateAllBalances();
-                setInterval(this.updateAllBalances,5000);
+                setInterval(this.updateAllBalances,15000);
             }, 200);
             // setTimeout(() => {
             //     storage.remove('wallets', function(error) {
@@ -577,7 +588,7 @@
                 });
             });
 
-            this.setDefaultChart('year');
+            //this.setDefaultChart('year');
 
             this.$on('setPeriod', function (period) {
                 this.setActivePeriod(period);
@@ -614,7 +625,7 @@
                 this.updateAllBalances()
             })
 
-            this.currentBalanceBeginPeriod();
+            //this.currentBalanceBeginPeriod();
         }
     };
 </script>

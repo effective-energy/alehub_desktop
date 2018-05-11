@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#set(USE_SNAPPY_DEFAULT 0)
+set(USE_SNAPPY_DEFAULT 0)
 mkdir $HOME/.local
 mkdir $HOME/.local/share
 mkdir $HOME/.local/share/ale
@@ -16,4 +16,4 @@ otool -L lib/libsnappy.a
 export LDFLAGS='-L/lib'
 export WITH_SNAPPY=/lib
 export SNAPPY=/lib
-./ale-wallet  --config wallet-config.yaml 12348
+./ale-wallet --wconfig ./wallet-config.yaml 12348
