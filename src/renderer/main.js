@@ -52,7 +52,7 @@ const i18n = new VueI18n({
 });
 
 var host = process.env.HOST || 'localhost';
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 9757;
 cors_proxy.createServer({
   originWhitelist: [], // Allow all origins
   requireHeader: ['origin', 'x-requested-with'],

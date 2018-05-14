@@ -292,7 +292,7 @@
                 }
             },
             getOpenOffers () {
-                this.$http.get(`http://localhost:8080/http://127.0.0.1:12348/node/state/offers/list/open`, {
+                this.$http.get(`http://localhost:9757/http://127.0.0.1:12348/node/state/offers/list/open`, {
                     headers : {
                         'Content-Type' : 'application/json; charset=UTF-8',
                         'Accept' : 'application/json'

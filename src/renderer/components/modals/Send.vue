@@ -375,7 +375,7 @@ export default {
             //     this.closeModal();
             // }
 
-            this.$http.post(`http://localhost:8080/http://127.0.0.1:12348/wallets/${this.selectedWalletUrl}/transactions/create/${this.address.replace(/\//g,"\%2F")}/${this.amountAle}`, 
+            this.$http.post(`http://localhost:9757/http://127.0.0.1:12348/wallets/${this.selectedWalletUrl}/transactions/create/${this.address.replace(/\//g,"\%2F")}/${this.amountAle}`, 
             {
                 headers : {
                     'Content-Type': 'application/json; charset=UTF-8',

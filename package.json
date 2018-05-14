@@ -47,7 +47,8 @@
       "icon": "build/icons/icon.ico"
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "build/icons",
+      "target": "deb"
     },
     "extraFiles": [
       {
