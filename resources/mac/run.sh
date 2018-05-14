@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set(USE_SNAPPY_DEFAULT 0)
+#set(USE_SNAPPY_DEFAULT 0)
 mkdir $HOME/.local
 mkdir $HOME/.local/share
 mkdir $HOME/.local/share/ale

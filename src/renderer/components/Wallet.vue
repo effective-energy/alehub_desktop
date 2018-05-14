@@ -398,7 +398,7 @@
                 return receiveBalance.total;
             },
             createNewWallet (name) {
-                this.$http.post(`http://localhost:8080/http://127.0.0.1:12348/newWallet`, {
+                this.$http.post(`http://localhost:9757/http://127.0.0.1:12348/newWallet`, {
                 headers : {
                     'Content-Type': 'application/json; charset=UTF-8',
                     'Accept': 'application/json'
@@ -454,7 +454,7 @@
                     if (error) throw error;
                     wallets = data.wallets;
                     let address = wallets[wallets.length-1].address.replace(/\//g,"\%2F")
-                    _this.$http.get(`http://localhost:8080/http://127.0.0.1:12348/node/state/account/${address}/$@`, {
+                    _this.$http.get(`http://localhost:9757/http://127.0.0.1:12348/node/state/account/${address}/$@`, {
                     headers : {
                         'Content-Type': 'application/json; charset=UTF-8',
                         'Accept': 'application/json'
@@ -484,7 +484,7 @@
                 // }, 1000);
             },
             importWallet(data) {
-                this.$http.put(`http://localhost:8080/http://127.0.0.1:12348/importWallet`,JSON.stringify(data.secret), {
+                this.$http.put(`http://localhost:9757/http://127.0.0.1:12348/importWallet`,JSON.stringify(data.secret), {
                 headers : {
                     'Content-Type': 'application/json; charset=UTF-8',
                     'Accept': 'application/json'
@@ -511,7 +511,7 @@
                     let wallets = data.wallets
                     for (let i = 0; i < wallets.length; i++) {
                         let urlAddress = wallets[i].address.replace(/\//g,"\%2F");
-                        _this.$http.get(`http://localhost:8080/http://127.0.0.1:12348/node/state/account/${urlAddress}/$@`, {
+                        _this.$http.get(`http://localhost:9757/http://127.0.0.1:12348/node/state/account/${urlAddress}/$@`, {
                         headers : {
                             'Content-Type': 'application/json; charset=UTF-8',
                             'Accept': 'application/json'
@@ -532,7 +532,7 @@
                 })
             },
             getTransactionsForWallet() {
-                this.$http.get(`http://localhost:8080/http://127.0.0.1:12348/wallets/${this.selectedWallet.replace(/\//g,"\%2F")}/transactions/list`, {
+                this.$http.get(`http://localhost:9757/http://127.0.0.1:12348/wallets/${this.selectedWallet.replace(/\//g,"\%2F")}/transactions/list`, {
                 headers : {
                     'Content-Type': 'application/json; charset=UTF-8',
                     'Accept': 'application/json'
