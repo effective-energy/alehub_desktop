@@ -60,3 +60,4 @@ typings/
 build
 dist
 .idea
+yarn.lock
