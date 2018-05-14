@@ -7,7 +7,7 @@ import getPlatform from './get-platform'
 
 const execPath = (process.env.NODE_ENV !== 'development') ?
   joinPath(dirname(appRootDir.get()), 'bin'):
-  joinPath(appRootDir.get(), 'resources', getPlatform());
+  joinPath(appRootDir.get().replace(/ /g, "\\ "), 'resources', getPlatform());
 
 const cmd = `${joinPath('cd '+execPath+ '; chmod 777 ./run.sh; ./run.sh')}`
 

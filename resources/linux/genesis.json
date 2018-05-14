@@ -1,0 +1,20 @@
+{
+    "distribution": {
+        "balanceDistribution": {
+            "tzIMHdj6+ZPkX+NsHEZ3BCmHUlKuxrq7vWy5ELcOWNM=": {
+                "$@": 10
+            },
+            "967HjRubdl7Ea7W9dn0eT8eQ0kNU32QZy7yAExXMnaI=": {
+                "$@": 10
+            },
+            "lrISul6Y9OnmE6USBCKZNdYpWI2c9+zt7chCeist1Eo=": {
+                "$@": 10
+            },
+            "g0Np7uR0puACJsrvVKClZA0j0pZ2ZRh+mdBtxOi0wo0=": {
+                "$@": 10
+            }
+        }
+    },
+    "validityPeriod": 5,
+    "serverKey": "fA3fM8gavGdTTepqv/1D+EM2C95+qGWxxUvMyBDSED0="
+}
