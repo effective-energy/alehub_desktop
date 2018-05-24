@@ -22,7 +22,7 @@
                     <label>{{ $t('pages.settings.language') }}</label>
                     <select-control
                       :current="selectedLang"
-                      :allOptions="['English', 'Русский', '中文']"
+                      :allOptions="['English', 'Русский']"
                       :id="'language'"
                     />
                   </div>
@@ -65,8 +65,6 @@ export default {
           return 'English'
         case 'rus':
           return 'Русский'
-        case 'china':
-          return '中文'
         default:
           return 'English';
       }
@@ -77,7 +75,6 @@ export default {
       if (id == "language") {
         if (value === 'English') localStorage.setItem('systemLang', 'eng')
         if (value === 'Русский') localStorage.setItem('systemLang', 'rus')
-        if (value === '中文') localStorage.setItem('systemLang', 'china')
           this.selectedLanguage = value
           this.$i18n.locale = localStorage.getItem('systemLang');
           this.$parent.$emit('changeSystemLanguage');
@@ -87,11 +84,33 @@ export default {
       if (e.target.localName === 'li') return false;
       if (e.target.className === 'value') return false;
       document.getElementsByClassName('value')[0].click();
+    },
+    importWallet(data) {
+      this.$http.put(`http://localhost:9757/http://127.0.0.1:12348/importWallet`,JSON.stringify(data.secret), {
+      headers : {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json'
+      }
+      }).then(response => {
+          let dif = this.walletList.find(item => {
+              return item.address === response.body.wiPublicKey;
+          });
+          if (dif !== undefined) return this.$modal.hide('newwallet');
+          this.setNewWalletToStorage(data.name, response.body.wiPublicKey)
+      }, response => {
+          this.$toasted.show("Invalid secret key", {
+              duration: 10000,
+              type: 'error',
+          });
+      })
     }
   },
   mounted() {
     this.$on("onselect", function (id, value) {
       this.newSelect(id, value)
+    });
+    this.$on("importWallet", function (data) {
+      this.importWallet(data)
     });
   }
 }

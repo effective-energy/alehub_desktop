@@ -7,15 +7,15 @@
         <div class="body">
 
             <div class="modal-warning" :class="{ 'bl': delWallet.isAgreed }">
-                <p class="agreed">{{ $t('modals.deleteWallet.confirm.titleStart') }} <b>Contract tokens</b> {{
+                <p class="agreed">{{ $t('modals.deleteWallet.confirm.titleStart') }} <b>{{ activeWallet.name }}</b> {{
                     $t('modals.deleteWallet.confirm.titleEnd') }}</p>
                 <div class="checkbox-contol">
-                    <input id="checkbox-access" type="checkbox" :value="delWallet.isAgreed" @change="agreedDelete"/>
+                    <input id="checkbox-access" type="checkbox" v-model="isAgreed"/>
                     <span id="label-checkbox" @click="makeFocusCheckbox">{{ $t('modals.deleteWallet.confirm.subtitle') }}</span>
                 </div>
             </div>
 
-            <div class="modal-control nobl" id="modal-wallet-name" @click="makeWalletNameFocus" v-if="delWallet.isAgreed">
+            <div class="modal-control nobl" id="modal-wallet-name" @click="makeWalletNameFocus" v-if="isAgreed">
                 <div class="modal-input">
                     <label id="wallet-name-label" class="title lc" >{{ $t('modals.deleteWallet.fields.walletName.label') }}</label>
                     <input type="text" class="input" id="wallet-name-input"
@@ -25,7 +25,7 @@
             </div>
 
             <div class="modal-btn text-center">
-                <button class="btn btn-default btn-large">{{ $t('modals.deleteWallet.buttons.cancel') }}</button>
+                <button class="btn btn-default btn-large" @click="closeModal">{{ $t('modals.deleteWallet.buttons.cancel') }}</button>
                 <button
                         class="btn btn-yellow btn-large"
                         :class="{ 'disabled': checkCorrectDeleteWallet || timer != 0 }"
@@ -42,13 +42,17 @@
 
 <script>
     import {mapMutations} from "vuex";
+    import storage from 'electron-json-storage';
 
     export default {
         name: 'deletewallet',
         data() {
             return {
                 timer: 0,
-                delWalletName: ''
+                delWalletName: '',
+                activeWallet: {},
+                walletList: [],
+                isAgreed: false
             }
         },
         computed: {
@@ -66,7 +70,7 @@
                 return this.$store.state.Wallets.delWalletProperty;
             },
             checkCorrectDeleteWallet: function() {
-                if (this.currentWallet.name === this.delWalletName)
+                if (this.activeWallet.name === this.delWalletName)
                     return false;
                 return true;
             }
@@ -110,6 +114,7 @@
             modalOpen() {
                 this.timer = 10;
                 this.countDown();
+                this.getWalletList();
             },
             getFirstAnotherWallet: function (rmWalletId) {
                 return this.newWallets.find(item => {
@@ -117,18 +122,29 @@
                 });
             },
             removeCurrentWallet: function () {
-                console.log(this.$store.state.Transactions.transactions);
-                let rmWalletId = this.currentWallet.id;
-                this.removeOffers(this.currentWallet.offers);
-                this.removeTransactions(this.currentWallet.transactions);
-                this.changeNewWallet(this.getFirstAnotherWallet(rmWalletId).id);
-                localStorage.setItem('walletId', this.currentWallet.id);
-                this.removeWallet(rmWalletId);
-
-                console.log(this.$store.state.Transactions.transactions);
-
-                this.$modal.hide('deletewallet');
+                let _this = this;
+                for (let i = 0; i < this.walletList.length; i++) {
+                    if (this.walletList[i].address === this.activeWallet.address) {
+                        this.walletList.splice(i,1);
+                        storage.set('wallets', this.walletList, function(error) {
+                            if (error)
+                                return console.error(error);
+                            if (_this.walletList.length === 0) _this.$router.push('/');
+                            _this.$parent.$emit('selectWallet', _this.walletList[0])
+                        })
+                    }
+                }
             },
+            getWalletList() {
+                let _this = this;
+                storage.getAll(function(error, data) {
+                    if (error) throw error
+                    _this.walletList = data.wallets;
+                    _this.activeWallet = data.wallets.find(item => {
+                        return data.selectedWallet === item.address
+                    });
+                })
+            }
         }
     }
 </script>

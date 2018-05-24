@@ -178,21 +178,9 @@
                 rightMenu: {
                     horizontal: false,
                     list: [{
-                        type: "link",
-                        name: this.$t('pages.summary.rightMenu.summary'),
-                        link: "/wallet"
-                    }, {
-                        type: 'link',
-                        name: this.$t('pages.summary.rightMenu.walletOffers'),
-                        link: '/wallet/offers'
-                    }, {
                         type: "modal",
                         name: this.$t('pages.summary.rightMenu.send'),
                         target: "send"
-                    }, {
-                        type: "link",
-                        name: this.$t('pages.summary.rightMenu.transactions'),
-                        link: "/wallet/transactions"
                     }, {
                         type: "link",
                         name: this.$t('pages.summary.rightMenu.walletSettings'),
@@ -202,7 +190,8 @@
                 searchText: '',
                 walletList: [],
                 transactionsList: [],
-                setIntervalIdTransactions: 0
+                setIntervalIdTransactions: 0,
+                setIntervalId: 0
             }
         },
         computed: {
@@ -487,7 +476,10 @@
                     if (dif !== undefined) return this.$modal.hide('newwallet');
                     this.setNewWalletToStorage(data.name, response.body.wiPublicKey)
                 }, response => {
-                    console.log('Все сломалось(')
+                    this.$toasted.show("Invalid secret key", {
+                        duration: 10000,
+                        type: 'error',
+                    });
                 })
             },
             getWalletList() {
@@ -554,7 +546,7 @@
             setTimeout(() => {
                 this.getWalletList();
                 this.updateAllBalances();
-                setInterval(this.updateAllBalances,15000);
+                this.setIntervalId = setInterval(this.updateAllBalances,15000);
             }, 200);
             // setTimeout(() => {
             //     storage.remove('wallets', function(error) {
@@ -564,6 +556,9 @@
             //         if (error) throw error;
             //     });
             // }, 100);
+        },
+        beforeDestroy () {
+            clearInterval(this.setIntervalId);
         },
         mounted() {
             // this.initiateDatepickers();

@@ -248,7 +248,6 @@
                 if (this.tmpFileSolution !== '') {
                     return false;
                 }
-                console.log('не пустой');
                 return true;
             }
         },

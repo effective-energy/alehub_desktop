@@ -279,8 +279,7 @@ export default {
       wallet: {},
       dropDownOption: [
         { title: this.$t('modals.newWallet.new.label'), isSelected: true, value: 'new' },
-        { title: this.$t('modals.newWallet.import.label'), isSelected: false, value: 'import' },
-        { title: this.$t('modals.newWallet.redeem.label'), isSelected: false, value: 'redeem' }
+        { title: this.$t('modals.newWallet.import.label'), isSelected: false, value: 'import' }
       ],
       redemtionKey: '',
       newWalletStep: 1,
@@ -592,7 +591,10 @@ export default {
         this.publicKey = response.body.wiPublicKey;
         this.changeStepCreate('next');
       }, response => {
-        console.log('Все сломалось(')
+        this.$toasted.show("Server error when creating wallet", {
+          duration: 10000,
+          type: 'error',
+        });
       });
     }
   },

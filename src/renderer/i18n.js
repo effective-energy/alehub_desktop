@@ -166,8 +166,8 @@ const messages = {
               placeholder: 'Wallet name'
             },
             mnemonic: {
-              label: 'Mnemonic phrase',
-              placeholder: 'Mnemonic phrase'
+              label: 'Secret key',
+              placeholder: 'Secret key'
             }
           }
         },
@@ -190,7 +190,7 @@ const messages = {
         },
         recovery: {
           phrase: {
-            title: 'Recovery phrase',
+            title: 'Secret key',
             text: 'On the following screen, you will see a set of X random words. This is your wallet backup phrase. It can be entered in any version of ALE application in order to back up or restore your wallet’s funds and private key.',
             checkbox: 'Make sure nobody looks into your screen unless you want them to have access to your funds.',
             btn: 'Continue'
@@ -490,19 +490,6 @@ const messages = {
         }
       }
     }
-  },
-  china: {
-  	pages: {
-  		notifications: {
-  			navbarTitle: '通知Feed'
-  		},
-      settings: {
-        navbarTitle: '設置',
-        panelHeadingGeneral: '一般',
-        language: '語言',
-        logout: '登出'
-      }
-  	}
   }
 }
 

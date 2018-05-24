@@ -36,7 +36,7 @@
 
         </div>
 
-        <div class="wallet-list wrap-between" @click="show">
+        <div v-if="!isSettings" class="wallet-list wrap-between" @click="show">
             <div class="wrap-in-wallet">
                 <p class="new-wallet">{{ $t('pages.walletsList.addNew') }}</p>
             </div>
@@ -75,6 +75,9 @@
             newWallets: {
                 type: Array,
                 required: true
+            },
+            isSettings: {
+                type: Boolean
             }
         },
         data() {
@@ -143,6 +146,8 @@
                     _this.getSelectedWallet();
                     _this.changeNewWallet(address);
                 })
+
+                this.$parent.$emit('selectWallet', address);
 
                 // this.changeNewWallet(address);
             },

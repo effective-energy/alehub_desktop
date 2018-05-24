@@ -11,6 +11,7 @@
             <Wallets-list
                     :selectedWallet="currentWallet"
                     :new-wallets="walletList"
+                    :isSettings="true"
             />
 
             <div class="content">
@@ -22,7 +23,7 @@
                                     <div class="wrap-input">
                                         <label for="walletname">{{ $t('pages.walletSettings.fields.name.walletName')
                                             }}</label>
-                                        <input type="text" id="walletname" :value="currentWallet.name"
+                                        <input type="text" id="walletname" :value="activeWallet.name"
                                                @input="changeWalletName" v-on:blur="changeWalname"
                                                @keyup.enter="changeWalname">
                                     </div>
@@ -54,8 +55,10 @@
     import ModalDeleteWallet from './modals/DeleteWallet';
     import ModalSend from "./modals/Send";
     import NewWallet from './modals/NewWallet';
+    import storage from 'electron-json-storage';
 
     import {mapMutations} from 'vuex';
+    import { setInterval } from 'timers';
 
     export default {
         name: 'walletSettings',
@@ -77,32 +80,20 @@
                         name: this.$t('pages.summary.rightMenu.summary'),
                         link: "/wallet"
                     }, {
-                        type: 'link',
-                        name: this.$t('pages.summary.rightMenu.walletOffers'),
-                        link: '/wallet/offers'
-                    }, {
                         type: "modal",
                         name: this.$t('pages.summary.rightMenu.send'),
                         target: "send"
-                    }, {
-                        type: "link",
-                        name: this.$t('pages.summary.rightMenu.transactions'),
-                        link: "/wallet/transactions"
-                    }, {
-                        type: "link",
-                        name: this.$t('pages.summary.rightMenu.walletSettings'),
-                        link: "/wallet/settings"
                     }]
                 },
                 spendingPassword: false,
                 newWalletName: '',
-                selectedSecurityLevel: 'normal'
+                selectedSecurityLevel: 'normal',
+                activeWallet: '',
+                walletList: [],
+                getWalletListId: 0
             }
         },
         computed: {
-            walletList() {
-                return this.$store.state.Wallets.wallets;
-            },
             currentWallet() {
                 return this.$store.state.Wallets.currentWallet;
             }
@@ -116,7 +107,17 @@
             }),
             changeWalname(e) {
                 e.target.blur();
-                this.updateWalletName(this.newWalletName)
+                let _this = this;
+                for (let i = 0; i < this.walletList.length; i++) {
+                    if (this.walletList[i].address === this.activeWallet.address) {
+                        this.walletList[i].name = this.newWalletName;
+                        storage.set('wallets', this.walletList, function(error) {
+                            if (error)
+                                return console.error(error);
+                            _this.getWalletList()
+                        })
+                    }
+                }
             },
             deleteWallet() {
                 this.$modal.show('deletewallet');
@@ -130,17 +131,43 @@
                 }
             },
             initComponent() {
-                this.newWalletName = this.currentWallet.name;
+                let _this = this;
+                this.getWalletList();
+                this.getWalletListId = setInterval(function () {
+                    _this.getWalletList();
+                }, 15000);
             },
             newSelect(value, id) {
                 if (id == "security")
                     this.selectedSecurityLevel = value;
             },
-
+            getSelectedWallet() {
+                let _this = this
+                storage.getAll(function(error, data) {
+                    if (error) throw error
+                    _this.activeWallet = _this.walletList.find(item => {
+                        return data.selectedWallet === item.address
+                    })
+                })
+            },
+            getWalletList: function () {
+                let _this = this;
+                storage.getAll(function(error, data) {
+                    if (error) throw error;
+                    if (!data.wallets) return _this.initialCurrentWallet();
+                    _this.walletList = data.wallets;
+                    _this.getSelectedWallet();
+                })
+            },
+            changeeWallet: function (address) {
+                this.activeWallet = this.walletList.find(item => {
+                    return item.address === address;
+                })
+            }
         },
         mounted() {
-            this.$on('selectWallet', function (index) {
-                this.changeWallet(index);
+            this.$on('selectWallet', function (address) {
+                this.changeeWallet(address);
             });
             this.$on("changeChecker", function (id, value) {
                 this.changeChecker(id, value);

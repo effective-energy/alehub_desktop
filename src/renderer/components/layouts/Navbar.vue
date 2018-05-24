@@ -22,7 +22,7 @@
             </div>
             <span class="title">{{ title }}</span>
             <div class="balance" :class="{ 'gridBalance': !rightMenu }" v-if="isBalance || rightMenu">
-                <span class="count" v-if="isBalance">
+                <span class="count" v-if="isBalance && !noWallets">
                     <vue-numeric
                             :value="cur"
                             :separator="correctLangSep"
@@ -32,13 +32,13 @@
                     />
                 </span>
                 <div
-                        v-if="isBalance"
+                        v-if="isBalance && !noWallets"
                         class="count count-currency"
                         :style="setMarginWhenOpenDropdown"
                         @click="toOpenDropdownCurrency"
                 >
-                    <span id="current-currency">{{ currencies[0].name }}</span>
-                    <span class="caret" v-if="!openDropdownCurrency"></span>
+                    <span id="current-currency">ALE</span>
+                    <span class="caret" v-if="false"></span>
                 </div>
                 <ul class="dropdown-currency" v-if="openDropdownCurrency">
                     <li
@@ -116,7 +116,8 @@
                         current: false
                     }
                 ],
-                cur: 0
+                cur: 0,
+                noWallets: true
             }
         },
         watch: {
@@ -205,6 +206,8 @@
                 storage.getAll(function(error, data) {
                     if (error) throw error;
                     if (!data.selectedWallet) return _this.cur = 0;
+                    if (data.wallets.length === 0) return _this.noWallets = true;
+                    _this.noWallets = false;
                     let selectedWallet = data.selectedWallet;
                     let wallets = data.wallets;
                     _this.cur = wallets.find(function(item) {
@@ -223,8 +226,8 @@
     .count-currency
         cursor pointer
         display inline-block
-        width 70px
-        padding 0 10px 0 10px
+        width 45px
+        padding 0
         margin-right 0 !important
 
     .dropdown-currency
