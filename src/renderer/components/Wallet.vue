@@ -397,18 +397,9 @@
                 );
                 return receiveBalance.total;
             },
-            createNewWallet (name) {
-                this.$http.post(`http://localhost:9757/http://127.0.0.1:12348/newWallet`, {
-                headers : {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'Accept': 'application/json'
-                }
-                }).then(response => {
-                    this.setNewWalletToStorage(name, response.body.wiPublicKey)
-                    this.changeNewWallet(response.body.wiPublicKey)
-                }, response => {
-                    console.log('Все сломалось(')
-                })
+            createNewWallet (name, publicKey) {
+                this.setNewWalletToStorage(name, publicKey);
+                this.changeNewWallet(publicKey);
             },
             setNewWalletToStorage (name, address) {
                 let wallets = [],
@@ -490,6 +481,10 @@
                     'Accept': 'application/json'
                 }
                 }).then(response => {
+                    let dif = this.walletList.find(item => {
+                        return item.address === response.body.wiPublicKey;
+                    });
+                    if (dif !== undefined) return this.$modal.hide('newwallet');
                     this.setNewWalletToStorage(data.name, response.body.wiPublicKey)
                 }, response => {
                     console.log('Все сломалось(')
@@ -613,8 +608,8 @@
                 (this.dateTo) ? this.dateTo = val : this.dateTo = null;
             });
 
-            this.$on('createNewWallet', function (name) {
-                this.createNewWallet(name)
+            this.$on('createNewWallet', function (name, wallet) {
+                this.createNewWallet(name, wallet)
             })
 
             this.$on('importWallet', function (data) {

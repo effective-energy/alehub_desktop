@@ -31,7 +31,7 @@
       <div class="modal-btn text-center">
         <button
           class="btn btn-yellow btn-large"
-          @click="changeStepCreate('next')"
+          @click="preCreate()"
           :disabled="checkNewWalletFields"
           :class="{ 'disabled': checkNewWalletFields }"
         >
@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div class="modal-control" @click="focusInput('redemptionKey')">
+      <div class="modal-control" @click="focusInput('secretKey')">
         <div class="modal-input input-phrase">
           <!-- <label class="title">{{ $t('modals.newWallet.import.fields.mnemonic.label') }}</label> -->
           <label class="title">Secret key</label>
@@ -87,7 +87,7 @@
       <div class="modal-btn text-center">
         <button
           class="btn btn-yellow btn-large"
-          @click="changeStepCreate('next')"
+          @click="createNewWallet()"
           :disabled="isImport"
           :class="{ 'disabled': isImport }"
         >
@@ -187,7 +187,7 @@
       </div>
 
       <div class="phrase">
-        <span v-for="(mnemonic, indexMnemonic) in recoveryMnemonicPhrase" :key="indexMnemonic">{{ mnemonic }} </span>
+        <span>{{ secretKey }} </span>
       </div>
 
       <div class="modal-btn text-center">
@@ -200,7 +200,7 @@
 
     <div v-if="newWalletStep == 2 && recoveryStep == 3" class="body">
 
-      <div class="modal-warning agreed-border">
+      <!-- <div class="modal-warning agreed-border">
         <p class="agreed">{{ $t('modals.newWallet.recovery.finish.each') }}</p>
       </div>
 
@@ -222,7 +222,7 @@
             @blur="recoveryBlur"
           />
         </div>
-      </div>
+      </div> -->
 
       <div class="modal-warning">
 
@@ -296,6 +296,7 @@ export default {
         deviceOnly: false,
         phraseSecure: false
       },
+      publicKey: '',
       secretKey: ''
     }
   },
@@ -313,7 +314,7 @@ export default {
       return false;
     },
     isConfirmRecovery () {
-      if(this.restorationAgreements.deviceOnly === false || this.restorationAgreements.phraseSecure === false || JSON.stringify(this.mnemonicsRecovery) !== JSON.stringify(this.recoveryMnemonicPhrase)) return true;
+      if(this.restorationAgreements.deviceOnly === false || this.restorationAgreements.phraseSecure === false) return true;
       return false;
     },
     newWallets() {
@@ -579,6 +580,20 @@ export default {
         this.$parent.$emit('createNewWallet', this.walletName1)
       else
         this.$parent.$emit('importWallet', {name: this.walletName1, secret: this.secretKey})
+    },
+    preCreate: function () {
+      this.$http.post(`http://localhost:9757/http://127.0.0.1:12348/newWallet`, {
+      headers : {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json'
+      }
+      }).then(response => {
+        this.secretKey = response.body.wisSecretKey;
+        this.publicKey = response.body.wiPublicKey;
+        this.changeStepCreate('next');
+      }, response => {
+        console.log('Все сломалось(')
+      });
     }
   },
   created() {
