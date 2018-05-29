@@ -24,7 +24,7 @@
       <div class="modal-control" @click="focusInput('newWalletName')">
         <div class="modal-input">
           <label class="title">{{ $t('modals.newWallet.new.fields.title.label') }}</label>
-          <input id="newWalletName" type="text" class="input" v-model="walletName1" :placeholder="$t('modals.newWallet.new.fields.title.placeholder')" @keyup.enter="changeStepCreate('next')">
+          <input id="newWalletName" type="text" class="input" v-model="walletName1" :placeholder="$t('modals.newWallet.new.fields.title.placeholder')" @keyup.enter="preCreate()">
         </div>
       </div>
 
