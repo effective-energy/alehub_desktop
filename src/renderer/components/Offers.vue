@@ -1,411 +1,728 @@
 <template>
-    <div class="offers">
-        <Navbar
-                :title="$t('pages.jobOffers.navbarTitle')"
+    <div class="contract-list">
+        <navbar title="Contract List"
                 :isNavigate="true"
-                :isBalance="false"
-                :rightMenu="rightMenu"
-        />
+                :isBalance="true"
+                :rightMenu="rightMenu"/>
 
-        <section class="main">
-            <div class="content nomenu">
-                <div class="container" v-if="isLoader">
-                    <div class="row">
-                        <div class="col-12">
-                            <Spinner/>
-                        </div>
+        <state-bar/>
+
+        <div class="row-page">
+            <div class="sidebar">
+                <div class="vertical-progress">
+                    <div class="circle circle-top circle-yellow">
+                        <div class="triangle-icon"></div>
                     </div>
-                </div>
 
-                <div class="container" v-else>
-                    <div class="row" v-if="notFoundOffers">
-                        <div class="col-12">
-                            <action-panel
-                                          :btn-router-text="$t('pages.jobOffers.newOfferBlock.subTitle')"
-                                          :action-router-text="$t('pages.jobOffers.newOfferBlock.title')"
-                                          to="/offers/new"
-                                          is-top-offers-action="true"
-                                          top-offers-apply-panel="true"
-                            />
-                        </div>
-                    </div>
-                    <div class="row" :class="{'flex-row': notFoundOffers}">
-
-                        <div class="col-9" :class="{'flex-col': notFoundOffers}">
-                            <div class="row-flex" v-if="!notFoundOffers">
-                                <div class="col">
-                                    <div class="list-panel-heading list-panel-heading-offers">
-                                        <h3>{{ currentNumOffers }} {{ $t('pages.jobOffers.amountOffers') }}</h3>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="list-panel-heading list-panel-count-offers">
-                                        <p>{{ $t('pages.jobOffers.filters.onPage') }}: </p>
-                                        <Select
-                                                current="10"
-                                                :all-options="optionsOffersOnPage"
-                                                type-select="offer"
-                                                count-offers="true"
-                                                :id="'offersonpage'"
-                                                @onselect="newSelect"
-                                        />
-                                    </div>
-                                    <div class="list-panel-heading list-panel-offers">
-                                        <p>{{ $t('pages.jobOffers.filters.sortBy.title') }}: </p>
-                                        <Select
-                                                current="CONTRACTOR RATING"
-                                                :all-options="optionsSortBy"
-                                                type-select="offer"
-                                                sort-by="true"
-                                                :id="'sortby'"
-                                                @onselect="newSelect"
-                                        />
-                                    </div>
-                                    <div class="list-panel-heading list-panel-sort">
-                                        <div class="control-arrow-container">
-                                            <a
-                                                    v-if="getSortPriority === 'decrease'"
-                                                    type="button"
-                                                    class="control-arrow"
-                                                    @click="doIncreasePriority"
-                                            >
-                                                <img class="arrow down" src="../assets/img/change-arrow-ic.svg" alt=""/>
-                                            </a>
-                                            <a
-                                                    v-if="getSortPriority === 'increase'"
-                                                    type="button"
-                                                    class="control-arrow"
-                                                    @click="doDecreasePriority"
-                                            >
-                                                <img class="arrow up" src="../assets/img/change-arrow-ic.svg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
+                    <div class="whole-line">
+                        <div class="selected-area">
+                            <div class="marker-calendar marker-calendar-top"
+                                 @click="openedFromDatepicker = !openedFromDatepicker">
+                                <div class="block">
+                                    <img src="../../../static/img/calendar-ic_black.svg"
+                                         alt="date from" width="16px" height="16px">
+                                    <div class="triangle"></div>
                                 </div>
                             </div>
 
-                            <offers-list
-                                    v-if="!notFoundOffers && !notFoundOffersByFilter"
-                                    :current-list-offers="offersListOpen"
-                            />
-                            <pagination
-                                    v-if="!notFoundOffers && !notFoundOffersByFilter"
-                                    :num-offers="currentNumOffers"
-                            />
-                            <div :class="{'wrap-not-found-offers-by-filter': notFoundOffersByFilter}">
-                                <div style="width: 100%;">
-                                    <h3
-                                            v-if="notFoundOffersByFilter"
-                                            class="no-found-offers"
-                                    >
-                                        No offers match your filters
-                                    </h3>
-                                    <action-panel
-                                            v-if="!notFoundOffers && getCountOfferPerPage === 50 || notFoundOffersByFilter"
-                                            :btnRouterText="$t('pages.jobOffers.newOfferBlock.subTitle')"
-                                            :actionRouterText="$t('pages.jobOffers.newOfferBlock.title')"
-                                            to="/offers/new"
-                                            isBottomOffersAction="true"
-                                    />
+                            <datepicker id="dateOffersFrom"
+                                        class="dateOffersFrom"
+                                        v-if="openedFromDatepicker"
+                                        v-model="offersDateFrom"
+                                        :language="$t('modals.pdf.lang')"
+                                        :inline="true"/>
+
+                            <div class="marker-calendar marker-calendar-bottom"
+                                 @click="openedToDatepicker = !openedToDatepicker">
+                                <div class="block">
+                                    <img src="../../../static/img/calendar-ic_black.svg"
+                                         alt="date to" width="16px" height="16px">
+                                    <div class="triangle"></div>
                                 </div>
                             </div>
+
+                            <datepicker id="dateOffersTo"
+                                        class="dateOffersTo"
+                                        :style="{ 'top': getSelectedAreaHeight }"
+                                        v-if="openedToDatepicker"
+                                        v-model="offersDateTo"
+                                        :language="$t('modals.pdf.lang')"
+                                        :inline="true"/>
                         </div>
+                        <div class="dividers-container">
+                            <div class="divider horizontal"
+                                 v-for="n in 8" :key="n">
+                            </div>
+                        </div>
+                        <div class="circle circle-big circle-yellow">
+                            <img src="../../../static/img/ale-logo.svg"
+                                 alt="ale logo" width="21px" height="25px">
+                            <div class="triangle">
 
-                        <div class="col-3" id="filters_block">
-                            <action-panel
-                                    v-if="!notFoundOffers"
-                                    :btn-router-text="$t('pages.jobOffers.newOfferBlock.subTitle')"
-                                    :action-router-text="$t('pages.jobOffers.newOfferBlock.title')"
-                                    to="/offers/new"
-                                    is-top-offers-action="true"
-                            />
-                            <!-- filters убрать в компонент фильтра -->
+                                <group-filter-buttons :filterElementOptions="changedFilterElementOptions"/>
 
-                            <!--<div class="list-panel-heading mr-t0">-->
-                                <!--<h3>{{ $t('pages.jobOffers.filtersBlock.title') }}</h3>-->
-                            <!--</div>-->
+                                <offers-filter v-for="item in filters"
+                                               v-if="item.opened"
+                                               :key="item.id"
+                                               :id="item.id"
+                                               :offset-top="filterOffsetTop(item.id)"/>
 
-                            <!--<Filters />-->
+                                <offers-filter-folded v-for="item in filters"
+                                                      v-if="item.folded"
+                                                      :key="item.id"
+                                                      :id="item.id"
+                                                      :title="item.title"
+                                                      :queue="item.queue"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="circle circle-bottom circle-green">
+                        <img src="../../../static/img/icons-for-circle/infinity.svg" alt="" width="12px" height="6px">
+                        <div class="triangle">
+                            <div class="filters-block">
+                                <div class="circle circle-green">
+                                    <img src="../../../static/img/icons-for-circle/infinity.svg" alt="">
+                                </div>
+                                <div class="circle circle-yellow">
+                                    <img src="../../../static/img/icons-for-circle/check.svg" alt="">
+                                </div>
+                                <div class="circle circle-red">
+                                    <img src="../../../static/img/icons-for-circle/hourglass.svg" alt="">
+                                </div>
+                                <div class="circle circle-black">
+                                    <img src="../../../static/img/icons-for-circle/line.svg" alt="">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+            <div class="search-result">
+                    <offers-list/>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-    import Navbar from './layouts/Navbar'
-    import OffersList from './layouts/OffersList'
-    import Filters from './layouts/Filters'
-    import Select from './layouts/forms/Select'
-    import Pagination from './layouts/Pagination'
-    import ActionPanel from './layouts/ActionPanel'
-    import Spinner from './layouts/Spinner'
+    import Navbar from './layouts/Navbar';
+    import StateBar from './layouts/StateBar';
+    import OffersList from './layouts/OffersList';
+    import OffersFilter from './layouts/OffersFilter';
+    import OffersFilterFolded from './layouts/OffersFilterFolded';
+    import GroupFilterButtons from './layouts/GroupFilterButtons';
 
-    import {mapMutations} from 'vuex';
+    import Datepicker from 'vuejs-datepicker';
+
     import {mapGetters} from 'vuex';
 
     export default {
-        name: 'offers',
+        name: 'Offers',
         components: {
             Navbar,
+            StateBar,
             OffersList,
-            Filters,
-            Select,
-            Pagination,
-            ActionPanel,
-            Spinner
+            OffersFilter,
+            OffersFilterFolded,
+            GroupFilterButtons,
+            Datepicker
+        },
+        watch: {
+            offersDateFrom: function (val) {
+                console.log(val, 'offersDateFrom');
+            },
+            offersDateTo: function (val) {
+                console.log(val, 'offersDateTo');
+            },
+
+            filters: {
+                handler: function (filter) {
+                    // console.log(filter, 'filters');
+                },
+                deep: true
+            }
         },
         data() {
             return {
-                isLoader: false,
-                notFoundOffers: false,
-                notFoundOffersByFilter: false,
-                //вынести во vuex?
-                optionsOffersOnPage: [10, 20, 50],
-                optionsSortBy: ["CONTRACTOR RATING", "PRICE", "END DATE"],
-                numOffers: 0,
+
+                changedFilterElementOptions: {},
+
+
+                filters: [],
+
+                openedFromDatepicker: false,
+                openedToDatepicker: false,
+                offersDateFrom: 0,
+                offersDateTo: 0,
+
+                openedContractorDialog: false,
+
+                clickCoordinates: {
+                    top: false,
+                    left: false
+                },
+
+                statusIcons: {
+                    arrows: {
+                        canceled: '../../../static/img/arrows/arrow-canceled.svg',
+                        completed: '../../../static/img/arrows/arrow-completed.svg',
+                        ongoing: '../../../static/img/arrows/arrow-ongoing.svg',
+                        timelag: '../../../static/img/arrows/arrow-timelag.svg'
+                    },
+                    circles: {
+                        canceled: '../../../static/img/icons-for-circle/canceled.svg',
+                        completed: '../../../static/img/icons-for-circle/completed.svg',
+                        ongoing: '../../../static/img/icons-for-circle/ongoing.svg',
+                        timelag: '../../../static/img/icons-for-circle/timelag.svg'
+                    }
+                },
+
                 rightMenu: {
                     horizontal: false,
                     list: [
                         {
                             type: 'link',
-                            name: this.$t('pages.jobOffers.rightMenu.savedOffers'),
-                            link: '/offers/saved'
+                            name: this.$t('pages.summary.rightMenu.summary'),
+                            link: '/'
                         },
                         {
                             type: 'link',
-                            name: this.$t('pages.jobOffers.rightMenu.createOffer'),
-                            link: '/offers/new'
+                            name: this.$t('pages.summary.rightMenu.walletSettings'),
+                            link: '/wallet/settings'
                         }
                     ]
                 },
-                selectedOffersOnPage: 10,
-                selectedSortBy: 'CONTRACTOR RATING',
-                offersListOpen: []
             }
         },
         computed: {
-            ...mapGetters([
-                'doSortByRatingIncrease',
-                'doSortByRatingDecrease',
-                'doSortByPriceIncrease',
-                'doSortByPriceDecrease',
-                'doSortByEndDateIncrease',
-                'doSortByEndDateDecrease',
-
-                'getComputedOfferList',
-
-                'getPartOffersList'
-            ]),
-            offersList: function () {
-                return this.$store.state.Offers.offersList;
+            ...mapGetters(
+                [
+                    'types',
+                    'offers',
+                    'contractors',
+                    'filtersCondition'
+                ]
+            ),
+            selectedTheme: function () {
+                return this.$store.state.Themes.theme;
             },
-            countOfferPerPage: function () {
-                return this.$store.state.Offers.countOfferPerPage;
-            },
-            currentNumOffers: function () {
-                return this.getComputedOfferList.length;
-            },
-            currentSortBy: function () {
-                return this.$store.state.Offers.currentSortBy;
-            },
-            //передавать данные из офферса в офферслист ибо проблемы с отсутствующими-присутствующими офферами
-            getOffersList: function () {
-                return this.$store.state.Offers.offersList;
-            },
-            getSortPriority: function () {
-                return this.$store.state.Offers.sortPriority;
-            },
-            getCountOfferPerPage: function () {
-                return this.$store.state.Offers.countOfferPerPage;
+            getSelectedAreaHeight: function () {
+                return getComputedStyle(document.querySelector('.selected-area')).height;
             }
-            // currentOfferList: function () {
-            //     if (!this.isSaved) {
-            //         // this.$parent.$emit('numOffers', this.getOffersResultList.length);
-            //         return this.getPartOffersList;
-            //     }
-            //     else {
-            //         // this.$parent.$emit('numOffers', this.getOfferSavedList.length);
-            //         console.log(this.currentListOffers);
-            //         return this.getPartOfferSavedList;
-            //     }
-            // }
         },
         methods: {
-            ...mapMutations({
-                setNewSelect: 'SET_NEW_SELECT',
-                setCurrentPage: 'SET_CURRENT_PAGE',
-                setCurrentPriority: 'SET_CURRENT_PRIORITY',
-                setSortPriority: 'SET_SORT_PRIORITY',
-                setCountOffersPerPage: 'SET_COUNT_OFFERS_PER_PAGE'
-            }),
+            /**
+             * return data of type contractor
+             *
+             * @param contractorTypeId
+             * @returns {*}
+             */
+            contractorType: function (contractorTypeId) {
+                return this.types.find(type => type.id === contractorTypeId);
+            },
+            /**
+             * return type of contractor
+             *
+             * @param contractorTypeId
+             * @returns {*}
+             */
+            contractorTypeType: function (contractorTypeId) {
+                return this.contractorType(contractorTypeId).type;
+            },
+            getCoords: function (elem) {
+                if (!elem)
+                    return false;
 
-            doIncreasePriority: function () {
-                this.setSortPriority('increase');
-
-                if (this.currentSortBy === 'CONTRACTOR RATING')
-                    return this.doSortByRatingIncrease;
-
-                if (this.currentSortBy === 'PRICE') {
-                    return this.doSortByPriceIncrease;
+                return {
+                    top: elem.getBoundingClientRect().top + pageYOffset,
+                    left: elem.getBoundingClientRect().left + pageXOffset
+                };
+            },
+            filterOffsetTop: function (id) {
+                if (!id) {
+                    console.error('Wrong argument value');
+                    return '0px';
                 }
 
-                if (this.currentSortBy === 'END DATE')
-                    return this.doSortByEndDateIncrease;
+                return this.getCoords(document.getElementById(this.contractorTypeType(id))).top -
+                       this.getCoords(document.getElementById('group-filter-buttons')).top + 'px';
             },
-            doDecreasePriority: function () {
-                this.setSortPriority('decrease');
 
-                if (this.currentSortBy === 'CONTRACTOR RATING')
-                    return this.doSortByRatingDecrease;
+            toggleContractorDialog: function (e, contractor) {
+                // this.openedContractorDialog = !this.openedContractorDialog;
 
-                if (this.currentSortBy === 'PRICE') {
-                    return this.doSortByPriceDecrease;
-                }
+                // this.currentContractorId = contractor.id;
 
-                if (this.currentSortBy === 'END DATE')
-                    return this.doSortByEndDateDecrease;
-            },
-            newSelect(value, id) {
-                if (id === 'offersonpage') {
-                    this.selectedOffersOnPage = value;
-                }
-                if (id === 'sortby') {
-                    this.selectedSortBy = value;
-                }
-            },
-            imitationLoadPage() {
-                this.isLoader = true;
-                setTimeout(() => {
-                    this.isLoader = false;
-                }, 750);
-            },
-            initiateStateOffers: function () {
-                this.doSortByRatingDecrease;
-                this.setCountOffersPerPage(10);
-                this.setCurrentPage(1);
+                if (!this.openedContractorDialog) {
+                    this.clickCoordinates.top = e.pageY;
+                    this.clickCoordinates.left = e.pageX;
+                    this.$store.dispatch('selectContractor',
+                        contractor
+                    ).then((resp) => {
+                        this.openedContractorDialog = true;
+                        //почитать ещё про промисы, then и catch
+                    }).catch(() => {
+                        console.log('reject 1')
+                    });
 
-                if (this.offersListOpen.length === 0) {
-                    this.notFoundOffers = true;
+                    return true;
+                } else if (this.openedContractorDialog === true && contractor.id !== this.selectedContractor.id) {
+                    this.clickCoordinates.top = e.pageY;
+                    this.clickCoordinates.left = e.pageX;
+                    this.$store.dispatch('selectContractor',
+                        contractor
+                    ).then(() => {
+
+                    }).catch(() => {
+                        console.log('reject 2')
+                    });
+                    return true;
+                }
+                console.log(3);
+                this.openedContractorDialog = false;
+                return false;
+            },
+            toFormatDate: function (date) {
+                let dateFormat = new Date(date);
+                return dateFormat.toDateString();
+            },
+            getStatusIcon: function (status, iconType) {
+                switch (status) {
+                    case 'completed':
+                        return iconType === 'arrows' ? this.statusIcons.arrows.completed : this.statusIcons.circles.completed;
+                    case 'ongoing':
+                        return iconType === 'arrows' ? this.statusIcons.arrows.ongoing : this.statusIcons.circles.ongoing;
+                    case 'timelag':
+                        return iconType === 'arrows' ? this.statusIcons.arrows.timelag : this.statusIcons.circles.timelag;
+                    default:
+                        return iconType === 'arrows' ? this.statusIcons.arrows.canceled : this.statusIcons.circles.canceled;
                 }
             },
-            getOpenOffers () {
-                this.$http.get(`http://localhost:9757/http://127.0.0.1:12348/node/state/offers/list/open`, {
-                    headers : {
-                        'Content-Type' : 'application/json; charset=UTF-8',
-                        'Accept' : 'application/json'
-                    }
-                }).then(response => {
-                    this.offersListOpen = response.body;
-                    console.log('S', response);
-                }, response => {
-                    console.log('E', response);
-                })
+            getIcon: function (name) {
+                return this.selectedTheme === 'dark' ? require(`../../../static/img/${name}_dark.svg`) : require(`../../../static/img/${name}.svg`);
+            },
+            checkContractorType: function (type) {
+                switch (type) {
+                    case 'TS':
+                        return 'ts';
+                    case 'TS execution':
+                        return 'ts-exec';
+                    case 'Check':
+                        return 'ch';
+                    default:
+                        return 'qa'
+                }
             }
         },
-        mounted() {
-            let currentPage = this.$router;
-            window.addEventListener('scroll', function (e) {
-                if(currentPage.currentRoute.name !== 'Offers') return false;
-                let filters = document.getElementById('filters_block');
-                if (window.scrollY >= 40) { // пофиксить
-                    filters.classList.add('fixed-filters');
-                } else {
-                    filters.classList.remove('fixed-filters');
-                }
-            });
-
-            this.imitationLoadPage();
-
-            this.$on('onselect', function (item, id) {
-                this.setNewSelect(item);
-
-                if (this.currentSortBy === 'CONTRACTOR RATING') {
-                    if (this.getSortPriority === 'increase')
-                        return this.doSortByRatingIncrease;
-                    else
-                        return this.doSortByRatingDecrease;
-                }
-
-                if (this.currentSortBy === 'PRICE') {
-                    if (this.getSortPriority === 'increase')
-                        return this.doSortByPriceIncrease;
-                    else
-                        return this.doSortByPriceDecrease;
-                }
-
-                if (this.currentSortBy === 'END DATE') {
-                    if (this.getSortPriority === 'increase')
-                        return this.doSortByEndDateIncrease;
-                    else
-                        return this.doSortByEndDateDecrease;
-                }
-
-                if (id === 'offersonpage')
-                    this.setCurrentPage(1);
-            });
-
-            this.$on("changeCurrentPage", function (item) {
-                this.setCurrentPage(item);
-            });
-
-            this.$on('notFoundOffersByFilter', function (result) {
-                this.notFoundOffersByFilter = result;
-            });
-
-            this.initiateStateOffers();
+        created() {
+            this.filters = this.filtersCondition;
         },
-        created () {
-            this.getOpenOffers();
+        mounted() {
+            this.$on('onFold', (obj) => {
+                this.changedFilterElementOptions = obj;
+
+            });
         }
     }
 </script>
 
 <style lang="stylus" scoped>
+    .contract-list
+        background-color #f0f4fa
 
-    .list-panel-count-offers,
-    .list-panel-sort
-        margin-top 0
-        margin-bottom 0
+        @media (max-width 620px)
+            overflow-x hidden
 
-    .list-panel-offers
-        margin 0
+        .row-page
+            padding-top 32px
+            padding-right 68px
+            padding-left 68px
+            display flex
 
-    .list-panel-sort
-        margin-left 0
+            @media (max-width 768px)
+                flex-direction column
+                padding-top 60px
+                padding-right 32px
+                padding-left 32px
 
-    .fixed-filters
-        position fixed
-        right 12px
-        padding-right 12px
-        top 50px
+            .sidebar
+                display flex
+                flex-direction column
+                align-items center
+                padding-top 18px
 
-    .no-found-offers
-        font-family MuseoSansCyrl500
-        font-size 16px
-        font-weight 500
-        line-height 1.25
-        text-align center
-        color #34343e
+                @media (max-width 768px)
+                    align-items flex-start
+                    padding-left 18px
 
-    .flex-row
+                @media (max-width 620px)
+                    padding-right 18px
+
+                .vertical-progress
+                    position relative
+
+                    @media (max-width 768px)
+                        width 80%
+
+                    @media (max-width 620px)
+                        width 100%
+
+                    .circle-top
+                        z-index 2
+                        top -18px
+                        position absolute
+                        display flex
+                        justify-content center
+
+                        @media (max-width 768px)
+                            top 0
+                            left -18px
+
+                        .triangle-icon
+                            border 6px solid transparent
+                            position absolute
+                            top 17px
+
+                            @media (max-width 768px)
+                                border 6px solid transparent
+                                border-left 6px solid #34343e
+                                left 15px
+                                top unset
+
+                    .circle-bottom
+                        bottom -18px
+                        position absolute
+
+                        @media (max-width 768px)
+                            bottom 0
+                            right -18px
+
+                        .triangle
+                            border 6px solid transparent
+                            position absolute
+                            left 56px
+
+                            @media (max-width 768px)
+                                border 6px solid transparent
+                                border-top 6px solid #aab7c7
+                                left 12px
+                                top 56px
+
+                    .filters-block
+                        position relative
+                        display flex
+                        flex-direction column
+                        justify-content space-between
+                        align-items center
+                        height 192px
+
+                        &:before
+                            content ""
+                            position absolute
+                            left -7px
+                            top calc(50% - 6px)
+                            bottom 0
+                            width 0
+                            height 0
+                            border-left 6px solid #a6aaae
+                            border-top 6px solid transparent
+                            border-bottom 6px solid transparent
+
+                        @media (max-width 768px)
+                            flex-direction row
+                            width 192px
+                            top 8px
+                            left -96px
+
+                        @media (max-width 620px)
+                            flex-direction column
+                            align-items center
+
+                    .whole-line
+                        width 36px
+                        height 544px
+                        background-image linear-gradient(to bottom, #e7eaee, #bcc5d1)
+                        border 1px solid #d2dae2
+                        position relative
+
+                        @media (max-width 768px)
+                            width 100%
+                            height 36px
+
+                        @media (max-width 768px)
+                            background-image linear-gradient(to right, #e7eaee, #bcc5d1)
+
+                        .marker-calendar-top
+                            left -50px
+                            top -18px
+
+                            @media (max-width 768px)
+                                left -16px
+                                bottom 0
+                                top -50px
+
+                        .marker-calendar-bottom
+                            left -50px
+                            bottom -18px
+
+                            @media (max-width 768px)
+                                top -50px
+                                right -16px
+                                left unset
+
+                        .marker-calendar-bottom, .marker-calendar-top
+                            .block
+                                background-image linear-gradient(to bottom, #ffe082, #ffd24f)
+
+                                .triangle
+                                    @media (max-width 768px)
+                                        border 16px solid transparent
+                                        border-top 8px solid #ffd24f
+                                        top 32px
+                                        left 0
+
+                        .circle-big
+                            /*z-index 2*/
+                            top 190px
+                            left -6px
+                            position absolute
+
+                            @media (max-width 768px)
+                                top -6px
+                                left 190px
+
+                            .triangle
+                                border 6px solid transparent
+                                position absolute
+                                left 60px
+
+                                @media (max-width 768px)
+                                    border 6px solid transparent
+                                    border-top 6px solid #aab7c7
+                                    top 60px
+                                    left 16px
+
+                        .dividers-container
+                            flex-direction column
+
+                            @media (max-width 768px)
+                                flex-direction row
+
+                        .selected-area
+                            background-image linear-gradient(to bottom, rgba(255, 224, 130, 0.3), rgba(255, 210, 79, 0.3))
+                            border solid 1px #ffd24f
+                            height 312px
+                            position absolute
+                            width 36px
+                            top 58px
+                            left -1px
+                            z-index 1
+
+                            .dateOffersFrom, .dateOffersTo
+                                z-index 3
+
+                            @media (max-width 768px)
+                                width 60%
+                                height 36px
+                                top -1px
+                                left 58px
+
+            .search-result
+                padding-left 100px
+                width 100%
+                max-width 1332px
+
+                @media (max-width 768px)
+                    padding-left 0
+                    padding-top 120px
+
+                @media (max-width 620px)
+                    padding-top 260px
+
+    .circle
+        width 36px
+        min-width 36px
+        height 36px
+        border-radius 50%
         display flex
-
-    .flex-col
-        display flex
-        align-items center
         justify-content center
-
-    .wrap-not-found-offers-by-filter
-        display flex
-        height 85vh
         align-items center
-        justify-content center
+        flex-direction column
+        border none
+        -webkit-transition all .3s ease
+        -moz-transition all .3s ease
+        -o-transition all .3s ease
+        transition all .3s ease
 
-    @media(max-width: 1040px)
-        .main
-            .content
-                padding-left 0
+        &.circle-big
+            width 48px
+            height 48px
+            min-width 48px
+            min-height 48px
+
+        &.circle-black
+            background-image linear-gradient(to right, #331a1a, #331010)
+
+        &.circle-red
+            background-image linear-gradient(to right, #ff8282, #ff4f4f)
+
+        &.circle-green
+            background-image linear-gradient(to right, #4dc484, #26bd51)
+
+        &.circle-yellow
+            background-image linear-gradient(to right, #ffe082, #ffd24f)
+            box-shadow 0 0 32px 0 rgba(0, 0, 0, 0.12), 0 4px 16px 0 rgba(0, 0, 0, 0.2)
+
+        &.circle-completed
+            background-image unset
+            border-style solid
+            border-width 2px
+            border-color #fed355
+
+        &.circle-ongoing
+            background-image unset
+            border-style solid
+            border-width 2px
+            border-color #2bd65c
+
+        &.circle-canceled
+            background-image unset
+            border-style solid
+            border-width 2px
+            border-color #331010
+
+        &.circle-timelag
+            background-image unset
+            border-style solid
+            border-width 2px
+            border-color #ff4f4f
+
+        .title
+            font-family MuseoSansCyrl500
+            color #fcfcfc
+            font-size 16px
+            text-transform uppercase
+            line-height 1
+            letter-spacing 1px
+            color #fcfcfc
+            text-shadow 0 0 2px rgba(0, 0, 0, 0.24)
+
+        .subtitle
+            font-family MuseoSansCyrl500
+            color #fcfcfc
+            font-size 9px
+            text-transform uppercase
+            text-shadow 0 0 2px rgba(0, 0, 0, 0.24)
+
+    .marker-calendar
+        cursor pointer
+        position absolute
+
+        .block
+            width 32px
+            height 32px
+            background-image linear-gradient(to right, #ffe082, #ffd24f)
+            position relative
+            display flex
+            justify-content space-around
+            align-items center
+
+            .triangle
+                border 16px solid transparent
+                border-left 8px solid #ffd24f
+                position absolute
+                top 0
+                left 32px
+
+    .dividers-container
+        display flex
+        justify-content space-between
+        align-items center
+        height 100%
+        width 100%
+        position absolute
+        top 0
+
+        .divider
+            width 2px
+            height 32px
+            opacity 0.6
+            background-color #fff
+
+            &.horizontal
+                width 32px
+                height 2px
+
+                @media (max-width 768px)
+                    width 2px
+                    height 32px
+
+            &:first-child, &:last-child
+                visibility hidden
+
+
+
+    // Dark Theme
+
+    .dark
+        .contract-list
+            background-color #4a4e65
+
+            .info-header
+                background-color #3f435e
+
+                .info
+                    color #fcfcfc
+
+            .row-page
+                .search-result
+                    .progress-list
+                        .progress-item
+                            .row-top
+                                .project-info
+                                    .title, .subtitle
+                                        color #fcfcfc
+
+                                .contractors-list
+                                    .contractors-content
+                                        .title, .subtitle
+                                            color #fcfcfc
+
+                            .progress-row
+                                .progress-bar
+                                    background-image linear-gradient(to right, #3a3a4a, #272730)
+
+                                    .step
+                                        border-color #272730
+
+                            .row-bottom
+                                .date
+                                    color #fcfcfc
+
+                .sidebar
+                    .vertical-progress
+                        .whole-line
+                            background-image linear-gradient(to bottom, #3a3a4a, #272730)
+                            border-color #272730
+
+                            @media (max-width 768px)
+                                background-image linear-gradient(to right, #3a3a4a, #272730)
+
+                            .selected-area
+                                border-color #8a7643
+
+            .dividers-container
+                .divider
+                    background-color #272730
+
+            .circle
+                .title, .subtitle
+                    color #34343e
+
+                &.qa, &.ts, &.ts-exec, &.check
+                    .title
+                        color #fcfcfc
 </style>
+
+
