@@ -1,7 +1,10 @@
 {
   "name": "alehub",
   "version": "0.0.0",
-  "author": "ALEHUB.IO",
+  "author": {
+    "name": "ALEHUB.IO",
+    "email": "info@alehub.io"
+  },
   "description": "Alehub wallet ",
   "license": null,
   "main": "./dist/electron/main.js",
