@@ -86,13 +86,13 @@ function createWindow () {
   //   console.log(`stduot: ${stdout}`)
   //   console.log(`stderr: ${stderr}`)
   // })
-  exec(cmd, (err, stdout, stderr) => {
-    if (err) {
-      console.warn(`exec error: ${err}`);
-    }
-    console.log(`stduot: ${stdout}`)
-    console.log(`stderr: ${stderr}`)
-  });
+  // exec(cmd, (err, stdout, stderr) => {
+  //   if (err) {
+  //     console.warn(`exec error: ${err}`);
+  //   }
+  //   console.log(`stduot: ${stdout}`)
+  //   console.log(`stderr: ${stderr}`)
+  // });
 }
 
 app.on('ready', createWindow)

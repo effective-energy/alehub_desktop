@@ -373,7 +373,7 @@
                 }
             },
             newOfferCreate () {
-                this.$http.post(`http://localhost:9757/http://localhost:12348/wallets/0eCtiP9kDKWaVOBwpJD8Oo1suoVC6JOU4DYg%2fSa6ZXA=/offers/publish`, {
+                this.$http.post(`http://localhost:12348/wallets/0eCtiP9kDKWaVOBwpJD8Oo1suoVC6JOU4DYg%2fSa6ZXA=/offers/publish`, {
                         "descr": "aGVsbG93b3JsZAo=",
                         "deadline": "2016-07-22T00:00:00Z",
                         "price": Number(this.offer.price),

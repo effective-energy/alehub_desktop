@@ -7,6 +7,10 @@
 
 <script>
 import ConnectionModal from './components/modals/ConnectionModal';
+import { exec } from 'child_process';
+import { join as joinPath, dirname } from 'path';
+import appRootDir from 'app-root-dir';
+import getPlatform from '../main/get-platform.js';
 
 export default {
   name: 'alehub',
@@ -37,6 +41,20 @@ export default {
   },
   created() {
     window.addEventListener('offline', this.updateOnlineStatus);
+
+    const execPath = (process.env.NODE_ENV !== 'development') ?
+      joinPath(dirname(appRootDir.get()), 'bin'):
+      joinPath(appRootDir.get().replace(/ /g, "\\ "), 'resources', getPlatform());
+
+    const cmd = `${joinPath('cd '+execPath+ '; chmod 777 ./run.sh; ./run.sh')}`
+
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        console.warn(`exec error: ${err}`);
+      }
+      console.log(`stduot: ${stdout}`)
+      console.log(`stderr: ${stderr}`)
+    });
   }
 }
 </script>
