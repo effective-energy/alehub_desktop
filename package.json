@@ -1,6 +1,6 @@
 {
   "name": "alehub",
-  "version": "0.0.0",
+  "version": "0.0.1-beta",
   "author": {
     "name": "ALEHUB.IO",
     "email": "info@alehub.io"
@@ -45,14 +45,32 @@
     },
     "mac": {
       "icon": "build/icons/icon.icns",
-      "target": "dmg"
+      "target": "dmg",
+      "extraFiles": [
+        {
+          "from": "resources/${os}",
+          "to": "Resources/bin",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
     },
     "win": {
       "icon": "build/icons/icon.ico"
     },
     "linux": {
       "icon": "build/icons",
-      "target": "deb"
+      "target": "deb",
+      "extraFiles": [
+        {
+          "from": "resources/${os}",
+          "to": "resources/bin",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
     },
     "extraFiles": [
       {
