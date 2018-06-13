@@ -71,16 +71,7 @@
           ]
         }
       ]
-    },
-    "extraFiles": [
-      {
-        "from": "resources/${os}",
-        "to": "Resources/bin",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ]
+    }
   },
   "dependencies": {
     "app-root-dir": "^1.0.2",

@@ -1,12 +1,14 @@
 <template>
   <div id="app" :class="systemLanguage">
-    <router-view />
-    <Connection-modal />
+    <router-view v-if="hubConnection"  />
+    <Connection-modal v-if="hubConnection" />
+    <connect-to-hub v-if="!hubConnection" />
   </div>
 </template>
 
 <script>
 import ConnectionModal from './components/modals/ConnectionModal';
+import ConnectToHub from './components/modals/ConnectToHub';
 import { exec } from 'child_process';
 import { join as joinPath, dirname } from 'path';
 import appRootDir from 'app-root-dir';
@@ -15,16 +17,30 @@ import getPlatform from '../main/get-platform.js';
 export default {
   name: 'alehub',
   components: {
-    ConnectionModal
+    ConnectionModal,
+    ConnectToHub
   },
   data() {
     return {
-      language: localStorage.getItem('systemLang')
+      language: localStorage.getItem('systemLang'),
+      hubConnection: false
     }
   },
   methods: {
     updateOnlineStatus (e) {
       if(!navigator.onLine) return this.$modal.show('connectionmodal');
+    },
+    startnode (execPath, cmd) {
+      let _this = this;
+      this.hubConnection = true;
+      exec(cmd, (err, stdout, stderr) => {
+        if (err) {
+          console.warn(`exec error: ${err}`);
+          _this.startnode(execPath, cmd);
+        }
+        console.log(`stduot: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+      });
     }
   },
   computed: {
@@ -48,13 +64,7 @@ export default {
 
     const cmd = `${joinPath('cd '+execPath+ '; chmod 777 ./run.sh; ./run.sh')}`
 
-    exec(cmd, (err, stdout, stderr) => {
-      if (err) {
-        console.warn(`exec error: ${err}`);
-      }
-      console.log(`stduot: ${stdout}`)
-      console.log(`stderr: ${stderr}`)
-    });
+    this.startnode(execPath, cmd);
   }
 }
 </script>
