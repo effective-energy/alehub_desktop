@@ -150,7 +150,8 @@ export default {
             errorAmount: false,
             errorPassword: false,
             password: '',
-            maxlength: 18
+            maxlength: 18,
+            realBalance: 0
         };
     },
     computed: {
@@ -375,7 +376,15 @@ export default {
             //     this.closeModal();
             // }
 
-            this.$http.post(`http://127.0.0.1:12348/wallets/${this.selectedWalletUrl}/transactions/create/${this.address.replace(/\//g,"\%2F")}/${this.amountAle}`, 
+            if (this.amountAle > this.realBalance) {
+                this.$toasted.show(this.$t('modals.error.moreThanHave'), {
+                    duration: 5000,
+                    type: 'error',
+                });
+                return false;
+            }
+
+            this.$http.post(`${window.nodeHost}/wallets/${this.selectedWalletUrl}/transactions/create/${this.address.replace(/\//g,"\%2F")}/${this.amountAle}`, 
             {
                 headers : {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -412,6 +421,17 @@ export default {
                 _this.focusInput('address');
             })
         }
+    },
+    created () {
+        let _this = this;
+        storage.getAll(function(error,data) {
+            if(error) throw error;
+            let wallets = data.wallets,
+                address = data.selectedWallet;
+            _this.realBalance = wallets.find(function(item) {
+                return item.address === address;
+            }).balance;
+        });
     }
 };
 </script>
