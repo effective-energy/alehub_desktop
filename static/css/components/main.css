@@ -14,4 +14,7 @@
 
 @media (max-width: 1040px) {
   .main .content {
-    padding-left: 260px; } }
+    padding-left: 260px; }
+  .main .nomenu {
+    width: 100%;
+    padding-left: 0; } }
