@@ -7,6 +7,7 @@ mkdir $HOME/.local/share/ale/linux
 rm $HOME/.local/share/ale/genesis.hash
 rm $HOME/.local/share/ale/genesis.json
 rm -r $HOME/.local/share/ale/linux/*
+rm $HOME/.local/share/ale/db/node/LOCK
 cp genesis.hash $HOME/.local/share/ale/
 cp genesis.json $HOME/.local/share/ale/
 cp -av ./* $HOME/.local/share/ale/linux

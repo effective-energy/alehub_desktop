@@ -6,6 +6,7 @@ mkdir $HOME/.local/share
 mkdir $HOME/.local/share/ale
 rm $HOME/.local/share/ale/genesis.hash
 rm $HOME/.local/share/ale/genesis.json
+rm $HOME/.local/share/ale/db/node/LOCK
 cp genesis.hash $HOME/.local/share/ale/
 cp genesis.json $HOME/.local/share/ale/
 #echo "7c18c65170e1198313afe120ef070210c374ef733b3008e336d37698e5517b64"  >> /Users/ss/.local/share/ale/genesis.hash
