@@ -24,8 +24,7 @@ Vue.use(Router);
 const router = new Router({
     routes: [{
         path: '/',
-        name: 'Wallet',
-        component: Wallet
+        redirect: '/wallet'
     }, {
         path: '/wallet',
         name: 'Wallet',
