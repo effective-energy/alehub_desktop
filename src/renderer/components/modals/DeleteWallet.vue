@@ -9,10 +9,11 @@
             <div class="modal-warning" :class="{ 'bl': delWallet.isAgreed }">
                 <p class="agreed">{{ $t('modals.deleteWallet.confirm.titleStart') }} <b>{{ activeWallet.name }}</b> {{
                     $t('modals.deleteWallet.confirm.titleEnd') }}</p>
-                <div class="checkbox-contol">
-                    <input id="checkbox-access" type="checkbox" v-model="isAgreed"/>
+                <label class="control control-checkbox">
                     <span id="label-checkbox" @click="makeFocusCheckbox">{{ $t('modals.deleteWallet.confirm.subtitle') }}</span>
-                </div>
+                    <input id="checkbox-access" type="checkbox"  class="type_project_arr" v-model="isAgreed"/>
+                    <div class="control-indicator"></div>
+                </label>
             </div>
 
             <div class="modal-control nobl" id="modal-wallet-name" @click="makeWalletNameFocus" v-if="isAgreed">
@@ -106,7 +107,7 @@
                 }
             },
             makeFocusCheckbox: function () {
-                document.getElementById('checkbox-access').click();
+                this.isAgreed = !this.isAgreed;
             },
             makeWalletNameFocus: function () {
                 document.getElementById('wallet-name-input').focus();
@@ -129,8 +130,17 @@
                         storage.set('wallets', this.walletList, function(error) {
                             if (error)
                                 return console.error(error);
-                            if (_this.walletList.length === 0) _this.$router.push('/');
-                            _this.$parent.$emit('selectWallet', _this.walletList[0])
+                            if (_this.walletList.length === 0) 
+                                _this.$router.push('/');
+                            else {
+                                storage.set('selectedWallet', _this.walletList[0].address, function(error) {
+                                    if (error)
+                                        return console.error(error);
+                                        _this.$parent.$emit('selectWallet', _this.walletList[0]);
+                                })
+                            }
+                            _this.$parent.$emit('getWalletList');
+                            _this.$modal.hide('deletewallet');
                         })
                     }
                 }
@@ -187,8 +197,8 @@
     }
 
     .modal-warning {
-        margin-left: 24px;
-        margin-right: 24px;
+        margin-left: 42px;
+        margin-right: 42px;
         margin-top: 4px;
 
         & .agreed {
@@ -243,5 +253,32 @@
 
     #wallet-name-label, #modal-wallet-name {
         cursor: pointer;
+    }
+
+    .control-checkbox {
+        font-size: 14px;
+        color: rgba(52, 52, 62, 0.7);
+        padding-left: 26px;
+        margin-top: 12px;
+        width: auto;
+
+        & span {
+            margin-left: 5px;
+            display: flex;
+        }
+
+        & .control-indicator {
+            height: 18px;
+            width: 18px;
+            top: 2px;
+
+            &:after {
+                top: 1.5px;
+                left: 5px;
+                width: 5px;
+                height: 9px;
+                border-width: 0px 1.5px 1.5px 0;
+            }
+        }
     }
 </style>

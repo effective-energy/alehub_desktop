@@ -175,6 +175,9 @@
             this.$on('selectNewWallet', function (walletId) {
                 this.changeNewWallet(walletId);
             });
+            this.$on('getWalletList', function () {
+                this.getWalletList();
+            })
         },
         created() {
             this.initComponent();
