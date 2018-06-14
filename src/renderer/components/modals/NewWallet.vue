@@ -581,7 +581,7 @@ export default {
         this.$parent.$emit('importWallet', {name: this.walletName1, secret: this.secretKey})
     },
     preCreate: function () {
-      this.$http.post(`http://127.0.0.1:12348/newWallet`, {
+      this.$http.post(`${window.nodeHost}/newWallet`, {
       headers : {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json'

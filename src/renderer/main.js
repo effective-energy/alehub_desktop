@@ -20,6 +20,8 @@ import cors_proxy from 'cors-anywhere';
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.config.productionTip = false;
 
+window.nodeHost = process.env.NODE_ENV === 'development'?'http://localhost:9757/http://127.0.0.1:12348':'http://127.0.0.1:12348';
+
 const NotifOptions = {
   position: 'bottom-center',
   fullWidth: true,

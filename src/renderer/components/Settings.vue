@@ -86,7 +86,7 @@ export default {
       document.getElementsByClassName('value')[0].click();
     },
     importWallet(data) {
-      this.$http.put(`http://127.0.0.1:12348/importWallet`,JSON.stringify(data.secret), {
+      this.$http.put(`${window.nodeHost}/importWallet`,JSON.stringify(data.secret), {
       headers : {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json'
