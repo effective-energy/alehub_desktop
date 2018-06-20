@@ -20,11 +20,11 @@
                                 <div class="stats-col">
                                     <div>
                                         <button class="buttons btn-yellow" @click="openModal('send')">
-                                            <img src="../assets/img/send.svg" width="18" height="15" class="icon">
+                                            <img :src="getIcon('send')" width="18" height="15" class="icon">
                                             {{ $t('pages.summary.buttons.send') }}
                                         </button>
                                         <button class="buttons btn-default" @click="openModal('request')">
-                                            <img src="../assets/img/receive.svg" width="18" height="15" class="icon">
+                                            <img :src="getIcon('receive')" width="18" height="15" class="icon">
                                             {{ $t('pages.summary.buttons.request') }}
                                         </button>
                                     </div>
@@ -198,6 +198,9 @@
             ...mapGetters([
                 "transactionsFilter"
             ]),
+            selectedTheme() {
+                return this.$store.state.Themes.theme;
+            },
             chartData() {
                 return this.$store.state.Charts;
             },
@@ -336,7 +339,14 @@
                 }
             },
 
+            getIcon: function (name) {
+                if (this.selectedTheme === 'dark')
+                    return require(`../assets/img/${name}_dark.svg`);
+                else if (this.selectedTheme === 'white')
+                    return require(`../assets/img/${name}_dark.svg`);
 
+                return require(`../assets/img/${name}.svg`);
+            },
 
 
             initiateDatepickers: function () {
@@ -454,7 +464,7 @@
                         console.error('Все сломалось(')
                     })
                 });
-                
+
 
                 // setTimeout(() => {
                 //     storage.getAll(function(error, data) {
@@ -509,7 +519,7 @@
                                 storage.set('wallets', wallets, function(error) {
                                     if (error) throw error
                                     _this.getWalletList()
-                                    
+
                                 })
                             }
                         }, response => {

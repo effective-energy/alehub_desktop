@@ -129,6 +129,9 @@
             navbarLinks() {
                 return this.$store.state.Navbar.links;
             },
+            selectedTheme: function () {
+                return this.$store.state.Themes.theme;
+            },
             selectedWalletAddress() {
                 return this.$store.state.Wallets.selectedWallet;
             },
@@ -140,7 +143,7 @@
                 return this.$store.state.Wallets.currentWallet;
             },
 
-            
+
             correctLangSep: function () {
                 if (localStorage.getItem('systemLang') === 'eng')
                     return ',';
@@ -165,6 +168,14 @@
         },
         methods: {
             getNavbarIcon: function (name) {
+                switch (this.selectedTheme) {
+                    case 'dark':
+                        return require(`../../assets/img/${name}.svg`);
+                    case 'white':
+                        return require(`../../assets/img/${name}_white.svg`);
+                    default:
+                        return require(`../../assets/img/${name}.svg`);
+                }
                 return require('../../assets/img/' + name + '.svg');
             },
             parseBalance: function (count) {
